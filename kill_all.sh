@@ -1,0 +1,9 @@
+killall lsyncd
+killall websocketd
+killall hub
+killall broker
+killall ahif
+killall feaib
+killall psib
+killall regib
+killall smsib

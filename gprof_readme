@@ -1,0 +1,1 @@
+gprof  broker ./gprog.out.xxx  | gprof2dot |  dot -Tsvg -o output.svg
