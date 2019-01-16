@@ -1,0 +1,313 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  us/call  us/call  name    
+ 16.67      0.03     0.03                             event_add_nolock_
+ 11.11      0.05     0.02    19678     1.02     1.02  mq_relay_callback_sub_to_pub(int, short, void*)
+ 11.11      0.07     0.02                             zmq::socket_base_t::check_tag()
+ 11.11      0.09     0.02                             zmq::ypipe_t<zmq::msg_t, 256>::read(zmq::msg_t*)
+  5.56      0.10     0.01                             zmq::ctx_t::send_command(unsigned int, zmq::command_t const&)
+  5.56      0.11     0.01                             zmq::pull_t::xpipe_terminated(zmq::pipe_t*)
+  5.56      0.12     0.01                             zmq::xsub_t::match(zmq::msg_t*)
+  5.56      0.13     0.01                             zmq::clock_t::rdtsc()
+  5.56      0.14     0.01                             zmq::dealer_t::xsend(zmq::msg_t*)
+  5.56      0.15     0.01                             zmq::metadata_t::get(std::string const&) const
+  5.56      0.16     0.01                             evmap_io_add_
+  5.56      0.17     0.01                             evmap_io_clear_
+  5.56      0.18     0.01                             evmap_io_del_
+  0.00      0.18     0.00    39606     0.00     0.00  mq_relay_callback(int, short, void*)
+  0.00      0.18     0.00    10003     0.00     0.00  router_callback(int, short, void*)
+  0.00      0.18     0.00     9199     0.00     0.00  svcregi_callback(int, short, void*)
+  0.00      0.18     0.00     1035     0.00     0.00  chk_tree_callback(_GNode*, void*)
+  0.00      0.18     0.00      487     0.00     0.00  traverse_dot_remove(_GNode*, long*)
+  0.00      0.18     0.00      438     0.00     0.00  chk_tree(main_ctx*, mq_regi*, int, service_ctx*)
+  0.00      0.18     0.00      434     0.00     0.00  update_node_info(node_data*, mq_regi*)
+  0.00      0.18     0.00      389     0.00     0.00  remove_node_callback(_GNode*, void*)
+  0.00      0.18     0.00      224     0.00     0.00  regi_action(main_ctx*, char const*, char const*)
+  0.00      0.18     0.00      220     0.00     0.00  chk_svc_dealer(main_ctx*, mq_regi*)
+  0.00      0.18     0.00       99     0.00     0.00  maketree_callback(int, short, void*)
+  0.00      0.18     0.00       99     0.00     0.00  traverse_dot_make(_GNode*, _IO_FILE*)
+  0.00      0.18     0.00       98     0.00     0.00  main_callback(int, short, void*)
+  0.00      0.18     0.00       98     0.00     0.00  removetree_callback(int, short, void*)
+  0.00      0.18     0.00        5     0.00     0.00  NewNode(int, mq_regi*, service_ctx*)
+  0.00      0.18     0.00        4     0.00     0.00  AddNode(_GNode*, _GNode*, _GNode*)
+  0.00      0.18     0.00        2     0.00     0.00  set_svc_slot(main_ctx*, service_ctx*, int, mq_regi*)
+  0.00      0.18     0.00        2     0.00     0.00  connect_svc_slot(service_ctx*)
+  0.00      0.18     0.00        2     0.00     0.00  create_new_dealer(main_ctx*, mq_regi*)
+  0.00      0.18     0.00        2     0.00     0.00  start_svc_polling(int, short, void*)
+  0.00      0.18     0.00        1     0.00     0.00  initialize(main_ctx*)
+  0.00      0.18     0.00        1     0.00     0.00  create_config_watch(event_base*, main_ctx*)
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+ 
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this 
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2014 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 5.56% of 0.18 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     16.7    0.03    0.00                 event_add_nolock_ [1]
+-----------------------------------------------
+                                                 <spontaneous>
+[2]     11.1    0.00    0.02                 event_process_active_single_queue [2]
+                0.02    0.00   19678/19678       mq_relay_callback_sub_to_pub(int, short, void*) [3]
+                0.00    0.00   39606/39606       mq_relay_callback(int, short, void*) [1862]
+                0.00    0.00   10003/10003       router_callback(int, short, void*) [1863]
+                0.00    0.00    9199/9199        svcregi_callback(int, short, void*) [1864]
+                0.00    0.00      99/99          maketree_callback(int, short, void*) [1872]
+                0.00    0.00      98/98          main_callback(int, short, void*) [1874]
+                0.00    0.00      98/98          removetree_callback(int, short, void*) [1875]
+-----------------------------------------------
+                0.02    0.00   19678/19678       event_process_active_single_queue [2]
+[3]     11.1    0.02    0.00   19678         mq_relay_callback_sub_to_pub(int, short, void*) [3]
+-----------------------------------------------
+                                                 <spontaneous>
+[4]     11.1    0.02    0.00                 zmq::socket_base_t::check_tag() [4]
+-----------------------------------------------
+                                                 <spontaneous>
+[5]     11.1    0.02    0.00                 zmq::ypipe_t<zmq::msg_t, 256>::read(zmq::msg_t*) [5]
+-----------------------------------------------
+                                                 <spontaneous>
+[6]      5.6    0.01    0.00                 evmap_io_add_ [6]
+-----------------------------------------------
+                                                 <spontaneous>
+[7]      5.6    0.01    0.00                 evmap_io_clear_ [7]
+-----------------------------------------------
+                                                 <spontaneous>
+[8]      5.6    0.01    0.00                 evmap_io_del_ [8]
+-----------------------------------------------
+                                                 <spontaneous>
+[9]      5.6    0.01    0.00                 zmq::ctx_t::send_command(unsigned int, zmq::command_t const&) [9]
+-----------------------------------------------
+                                                 <spontaneous>
+[10]     5.6    0.01    0.00                 zmq::pull_t::xpipe_terminated(zmq::pipe_t*) [10]
+-----------------------------------------------
+                                                 <spontaneous>
+[11]     5.6    0.01    0.00                 zmq::xsub_t::match(zmq::msg_t*) [11]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     5.6    0.01    0.00                 zmq::clock_t::rdtsc() [12]
+-----------------------------------------------
+                                                 <spontaneous>
+[13]     5.6    0.01    0.00                 zmq::dealer_t::xsend(zmq::msg_t*) [13]
+-----------------------------------------------
+                                                 <spontaneous>
+[14]     5.6    0.01    0.00                 zmq::metadata_t::get(std::string const&) const [14]
+-----------------------------------------------
+                0.00    0.00   39606/39606       event_process_active_single_queue [2]
+[1862]   0.0    0.00    0.00   39606         mq_relay_callback(int, short, void*) [1862]
+-----------------------------------------------
+                0.00    0.00   10003/10003       event_process_active_single_queue [2]
+[1863]   0.0    0.00    0.00   10003         router_callback(int, short, void*) [1863]
+-----------------------------------------------
+                0.00    0.00    9199/9199        event_process_active_single_queue [2]
+[1864]   0.0    0.00    0.00    9199         svcregi_callback(int, short, void*) [1864]
+                0.00    0.00     224/224         regi_action(main_ctx*, char const*, char const*) [1870]
+-----------------------------------------------
+                0.00    0.00    1035/1035        g_node_children_foreach [965]
+[1865]   0.0    0.00    0.00    1035         chk_tree_callback(_GNode*, void*) [1865]
+-----------------------------------------------
+                0.00    0.00      98/487         removetree_callback(int, short, void*) [1875]
+                0.00    0.00     389/487         remove_node_callback(_GNode*, void*) [1869]
+[1866]   0.0    0.00    0.00     487         traverse_dot_remove(_GNode*, long*) [1866]
+-----------------------------------------------
+                0.00    0.00     438/438         chk_svc_dealer(main_ctx*, mq_regi*) [1871]
+[1867]   0.0    0.00    0.00     438         chk_tree(main_ctx*, mq_regi*, int, service_ctx*) [1867]
+                0.00    0.00     434/434         update_node_info(node_data*, mq_regi*) [1868]
+                0.00    0.00       4/5           NewNode(int, mq_regi*, service_ctx*) [1876]
+                0.00    0.00       4/4           AddNode(_GNode*, _GNode*, _GNode*) [1877]
+-----------------------------------------------
+                0.00    0.00     434/434         chk_tree(main_ctx*, mq_regi*, int, service_ctx*) [1867]
+[1868]   0.0    0.00    0.00     434         update_node_info(node_data*, mq_regi*) [1868]
+-----------------------------------------------
+                0.00    0.00     389/389         g_node_children_foreach [965]
+[1869]   0.0    0.00    0.00     389         remove_node_callback(_GNode*, void*) [1869]
+                0.00    0.00     389/487         traverse_dot_remove(_GNode*, long*) [1866]
+-----------------------------------------------
+                0.00    0.00     224/224         svcregi_callback(int, short, void*) [1864]
+[1870]   0.0    0.00    0.00     224         regi_action(main_ctx*, char const*, char const*) [1870]
+                0.00    0.00     220/220         chk_svc_dealer(main_ctx*, mq_regi*) [1871]
+-----------------------------------------------
+                0.00    0.00     220/220         regi_action(main_ctx*, char const*, char const*) [1870]
+[1871]   0.0    0.00    0.00     220         chk_svc_dealer(main_ctx*, mq_regi*) [1871]
+                0.00    0.00     438/438         chk_tree(main_ctx*, mq_regi*, int, service_ctx*) [1867]
+                0.00    0.00       2/2           create_new_dealer(main_ctx*, mq_regi*) [1880]
+-----------------------------------------------
+                0.00    0.00      99/99          event_process_active_single_queue [2]
+[1872]   0.0    0.00    0.00      99         maketree_callback(int, short, void*) [1872]
+                0.00    0.00      99/99          traverse_dot_make(_GNode*, _IO_FILE*) [1873]
+-----------------------------------------------
+                0.00    0.00      99/99          maketree_callback(int, short, void*) [1872]
+[1873]   0.0    0.00    0.00      99         traverse_dot_make(_GNode*, _IO_FILE*) [1873]
+-----------------------------------------------
+                0.00    0.00      98/98          event_process_active_single_queue [2]
+[1874]   0.0    0.00    0.00      98         main_callback(int, short, void*) [1874]
+-----------------------------------------------
+                0.00    0.00      98/98          event_process_active_single_queue [2]
+[1875]   0.0    0.00    0.00      98         removetree_callback(int, short, void*) [1875]
+                0.00    0.00      98/487         traverse_dot_remove(_GNode*, long*) [1866]
+-----------------------------------------------
+                0.00    0.00       1/5           initialize(main_ctx*) [1882]
+                0.00    0.00       4/5           chk_tree(main_ctx*, mq_regi*, int, service_ctx*) [1867]
+[1876]   0.0    0.00    0.00       5         NewNode(int, mq_regi*, service_ctx*) [1876]
+-----------------------------------------------
+                0.00    0.00       4/4           chk_tree(main_ctx*, mq_regi*, int, service_ctx*) [1867]
+[1877]   0.0    0.00    0.00       4         AddNode(_GNode*, _GNode*, _GNode*) [1877]
+-----------------------------------------------
+                0.00    0.00       2/2           create_new_dealer(main_ctx*, mq_regi*) [1880]
+[1878]   0.0    0.00    0.00       2         set_svc_slot(main_ctx*, service_ctx*, int, mq_regi*) [1878]
+-----------------------------------------------
+                0.00    0.00       2/2           start_svc_polling(int, short, void*) [1881]
+[1879]   0.0    0.00    0.00       2         connect_svc_slot(service_ctx*) [1879]
+-----------------------------------------------
+                0.00    0.00       2/2           chk_svc_dealer(main_ctx*, mq_regi*) [1871]
+[1880]   0.0    0.00    0.00       2         create_new_dealer(main_ctx*, mq_regi*) [1880]
+                0.00    0.00       2/2           set_svc_slot(main_ctx*, service_ctx*, int, mq_regi*) [1878]
+-----------------------------------------------
+                0.00    0.00       2/2           event_once_cb [392]
+[1881]   0.0    0.00    0.00       2         start_svc_polling(int, short, void*) [1881]
+                0.00    0.00       2/2           connect_svc_slot(service_ctx*) [1879]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1728]
+[1882]   0.0    0.00    0.00       1         initialize(main_ctx*) [1882]
+                0.00    0.00       1/5           NewNode(int, mq_regi*, service_ctx*) [1876]
+-----------------------------------------------
+                0.00    0.00       1/1           svc_router_thrd(void*) [1938]
+[1883]   0.0    0.00    0.00       1         create_config_watch(event_base*, main_ctx*) [1883]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2014 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+ [1882] initialize(main_ctx*) [1862] mq_relay_callback(int, short, void*) [9] zmq::ctx_t::send_command(unsigned int, zmq::command_t const&)
+ [1870] regi_action(main_ctx*, char const*, char const*) [1881] start_svc_polling(int, short, void*) [10] zmq::pull_t::xpipe_terminated(zmq::pipe_t*)
+ [1878] set_svc_slot(main_ctx*, service_ctx*, int, mq_regi*) [1873] traverse_dot_make(_GNode*, _IO_FILE*) [11] zmq::xsub_t::match(zmq::msg_t*)
+ [1874] main_callback(int, short, void*) [1883] create_config_watch(event_base*, main_ctx*) [12] zmq::clock_t::rdtsc()
+ [1871] chk_svc_dealer(main_ctx*, mq_regi*) [1875] removetree_callback(int, short, void*) [5] zmq::ypipe_t<zmq::msg_t, 256>::read(zmq::msg_t*)
+ [1863] router_callback(int, short, void*) [1866] traverse_dot_remove(_GNode*, long*) [13] zmq::dealer_t::xsend(zmq::msg_t*)
+ [1879] connect_svc_slot(service_ctx*) [1869] remove_node_callback(_GNode*, void*) [14] zmq::metadata_t::get(std::string const&) const
+ [1864] svcregi_callback(int, short, void*) [3] mq_relay_callback_sub_to_pub(int, short, void*) [1] event_add_nolock_
+ [1868] update_node_info(node_data*, mq_regi*) [1877] AddNode(_GNode*, _GNode*, _GNode*) [6] evmap_io_add_
+ [1865] chk_tree_callback(_GNode*, void*) [1876] NewNode(int, mq_regi*, service_ctx*) [7] evmap_io_clear_
+ [1880] create_new_dealer(main_ctx*, mq_regi*) [1867] chk_tree(main_ctx*, mq_regi*, int, service_ctx*) [8] evmap_io_del_
+ [1872] maketree_callback(int, short, void*) [4] zmq::socket_base_t::check_tag()
