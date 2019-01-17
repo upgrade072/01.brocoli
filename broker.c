@@ -108,7 +108,8 @@ void mq_relay_callback(evutil_socket_t fd, short what, void *arg)
     size_t more_size = sizeof(more);
     char buffer[MAX_BUFF_SIZE] = {0,}; // TODO!!! modify size
 
-    while ((recv_byte = zmq_recv(relay->sock_from, buffer, sizeof(buffer), ZMQ_DONTWAIT)) >= 0) {
+    int relay_cnt = 0;
+    while (relay_cnt++ < 1000 &&(recv_byte = zmq_recv(relay->sock_from, buffer, sizeof(buffer), ZMQ_DONTWAIT)) >= 0) {
         //fprintf(stderr, "dbg] (((%s))) relay [%d:%s]\n", relay->relay_name, recv_byte, buffer);
         zmq_getsockopt(relay->sock_from, ZMQ_RCVMORE, &more, &more_size);
         zmq_send(relay->sock_to, buffer, recv_byte, ZMQ_DONTWAIT| (more ? ZMQ_SNDMORE : 0));
@@ -126,7 +127,8 @@ void mq_relay_callback_sub_to_pub(evutil_socket_t fd, short what, void *arg)
      * - svc_pid | MQ_CONF
      * - message(s)
      */
-    while (zmq_recv(relay->sock_from, svc, sizeof(svc), ZMQ_DONTWAIT) >= 0) { // remove svc tag
+    int relay_cnt = 0;
+    while (relay_cnt++ < 1000 && zmq_recv(relay->sock_from, svc, sizeof(svc), ZMQ_DONTWAIT) >= 0) { // remove svc tag
 #if 0
         relay_snd_more(relay->sock_from, relay->sock_to, NULL);
 #else
@@ -393,6 +395,27 @@ void svcregi_callback(evutil_socket_t fd, short what, void *arg)
     zmq_msg_close (&msg); // caution!! related all value will lose reference
 }
 
+
+/* for graph show */
+#define GIB 1073741824
+#define MIB 1048576
+#define KIB 1024
+#define BYTE 1
+typedef enum measure_print {
+    M_GIB = 0,
+    M_MIB,
+    M_KIB,
+    M_BYTE,
+    M_MAX
+} measure_print_t;
+
+char measure_str[][1024] = {
+    "GB",
+    "MB",
+    "KB",
+    "BYTE",
+    "MAX"
+};
 void traverse_dot_make(GNode *root, FILE *fp)
 {
     unsigned int service_num = g_node_n_children(root);
@@ -431,7 +454,21 @@ void traverse_dot_make(GNode *root, FILE *fp)
             fprintf(fp, "\t\tlabel = \"%s\";\n", proc_data->host);
             fprintf(fp, "\t\tlabelloc = b;\n"); // bottom
 
-            fprintf(fp, "\t\t%s [shape=record %s label=\"{%s|%s}|%19s|send(cnt %d/byte %d)\\nrecv(cnt %d/byte %d)\"];\n",
+
+            int send_perf = proc_data->sndrcv.send_byte > GIB ? M_GIB : 
+                proc_data->sndrcv.send_byte > MIB ? M_MIB :
+                proc_data->sndrcv.send_byte > KIB ? M_KIB : M_BYTE;
+            float send_val = proc_data->sndrcv.send_byte > GIB ? (proc_data->sndrcv.send_byte / GIB) :
+                proc_data->sndrcv.send_byte > MIB ? (proc_data->sndrcv.send_byte / MIB) :
+                proc_data->sndrcv.send_byte > KIB ? (proc_data->sndrcv.send_byte / KIB) : proc_data->sndrcv.send_byte;
+            int recv_perf = proc_data->sndrcv.recv_byte > GIB ? M_GIB : 
+                proc_data->sndrcv.recv_byte > MIB ? M_MIB :
+                proc_data->sndrcv.recv_byte > KIB ? M_KIB : M_BYTE;
+            float recv_val = proc_data->sndrcv.recv_byte > GIB ? (proc_data->sndrcv.recv_byte / GIB) :
+                proc_data->sndrcv.recv_byte > MIB ? (proc_data->sndrcv.recv_byte / MIB) :
+                proc_data->sndrcv.recv_byte > KIB ? (proc_data->sndrcv.recv_byte / KIB) : proc_data->sndrcv.recv_byte;
+
+            fprintf(fp, "\t\t%s [shape=record %s label=\"{%s|%s}|%19s|send(cnt %d/ %.2f %s)\\nrecv(cnt %d/ %.2f %s)\"];\n",
                     proc_data->name, 
                     (proc_data->sndrcv.send_cnt == 0 && proc_data->sndrcv.recv_cnt == 0) ? SHAPE_NOSEND_NORECV :
                     (proc_data->sndrcv.send_cnt > 0 && proc_data->sndrcv.recv_cnt == 0) ? SHAPE_SENDEXIST_NORECV :
@@ -440,9 +477,11 @@ void traverse_dot_make(GNode *root, FILE *fp)
                     proc_data->name,
                     ctime(&proc_data->hb_rcv_time),
                     proc_data->sndrcv.send_cnt,
-                    proc_data->sndrcv.send_byte,
+                    send_val,
+                    measure_str[send_perf],
                     proc_data->sndrcv.recv_cnt,
-                    proc_data->sndrcv.recv_byte);
+                    recv_val,
+                    measure_str[recv_perf]);
 
             if (proc_data->via_type == CONN_IPC) {
                 fprintf(fp, "%s -> %s;\n", svc_data->name, proc_data->name);
@@ -517,11 +556,13 @@ static void *svc_regi_thrd(void *arg)
     /* own evbase */
     struct event_base *evbase = event_base_new();
 
+#if 0
     /* zmq context */
     void *zmq_context = zmq_init(1);
+#endif
 
     /* subscriber services regi */
-    main_ctx->zmq_sub = zmq_socket(zmq_context, ZMQ_SUB);
+    main_ctx->zmq_sub = zmq_socket(main_ctx->zmq_context, ZMQ_SUB);
     zero_linger(main_ctx->zmq_sub);
     zmq_setsockopt (main_ctx->zmq_sub, ZMQ_SUBSCRIBE, MQ_REG, strlen(MQ_REG));
     zmq_bind(main_ctx->zmq_sub, LISTEN_ADDR_SUB);
@@ -529,7 +570,7 @@ static void *svc_regi_thrd(void *arg)
     /* publish received regi to interhub */
     if (main_ctx->interhub_address[0]) {
         fprintf(stderr, "log] try connect to interhub [%s]...", main_ctx->interhub_address);
-        main_ctx->zmq_pub_to_interhub = zmq_socket(zmq_context, ZMQ_PUB);
+        main_ctx->zmq_pub_to_interhub = zmq_socket(main_ctx->zmq_context, ZMQ_PUB);
         zero_linger(main_ctx->zmq_pub_to_interhub);
         zmq_connect(main_ctx->zmq_pub_to_interhub, main_ctx->interhub_address);
         fprintf(stderr, "well done\n");
@@ -626,7 +667,8 @@ void router_callback(evutil_socket_t fd, short what, void *arg)
     char msg_type[128] = {0,};
     int from_len = 0, type_len = 0;
 
-    while ((from_len = zmq_recv(zmq_router, from_msg, sizeof(from_msg), ZMQ_DONTWAIT)) >= 0 &&
+    int relay_cnt = 0;
+    while (relay_cnt++ < 1000 && (from_len = zmq_recv(zmq_router, from_msg, sizeof(from_msg), ZMQ_DONTWAIT)) >= 0 &&
            (type_len = zmq_recv(zmq_router, msg_type, sizeof(msg_type), ZMQ_DONTWAIT)) >= 0) {
         from_msg[from_len] = '\0';
         msg_type[type_len] = '\0';
@@ -784,15 +826,17 @@ static void *svc_router_thrd(void *arg)
     /* own evbase */
     struct event_base *evbase = event_base_new();
 
+#if 0
     void *zmq_context = zmq_init(4); // TODO modify
+#endif
 
     /* create publisher */
-    main_ctx->zmq_pub = zmq_socket(zmq_context, ZMQ_PUB);
+    main_ctx->zmq_pub = zmq_socket(main_ctx->zmq_context, ZMQ_PUB);
     zero_linger(main_ctx->zmq_pub);
     zmq_bind(main_ctx->zmq_pub, LISTEN_ADDR_PUB);
 
     /* creater router */
-    main_ctx->zmq_router = zmq_socket(zmq_context, ZMQ_ROUTER);
+    main_ctx->zmq_router = zmq_socket(main_ctx->zmq_context, ZMQ_ROUTER);
     zero_linger(main_ctx->zmq_router);
 
     int route_opt = 1;
@@ -823,7 +867,9 @@ static void *svc_dealer_thrd(void *arg)
 
     /* own evbase */
     main_ctx->evbase = event_base_new();
+#if 0
     main_ctx->zmq_context = zmq_init(4); // TODO modify
+#endif
 
     event_base_loop(main_ctx->evbase, EVLOOP_NO_EXIT_ON_EMPTY);
 
@@ -870,6 +916,8 @@ int main(int argc, char **argv)
         if (argc == 2)
             sprintf(main_ctx.interhub_address, "tcp://%s:%d", argv[1], MQ_HUB_PORT);
     }
+
+    main_ctx.zmq_context = zmq_init(12); // TODO modify
 
     // TODO!!! thread initial
     pthread_t service_worker = {0,};

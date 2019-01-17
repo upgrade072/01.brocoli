@@ -15,11 +15,12 @@
 #define MQ_HUB_PORT     9002
 /* for broker */
 #define LISTEN_ADDR_SUB     "tcp://*:9000"  // related to MQ_REGI_PORT
-#if 1
+#if 0
 #define LISTEN_ADDR_PUB     "ipc://BROKER_PUBL.ipc"
 #define LISTEN_ADDR_ROUTER  "ipc://BROKER_ROUTER.ipc"
 #else
 /* not work because they need single context to communication */
+// --> modify done good work
 #define LISTEN_ADDR_PUB     "inproc://BROKER_PUBL.inproc"
 #define LISTEN_ADDR_ROUTER  "inproc://BROKER_ROUTER.inproc"
 #endif
