@@ -1,6 +1,6 @@
 include ../MakeVars
 
-CC			= g++ -Wno-write-strings #remove const char warning
+CC			= g++ -Wno-write-strings #remove const char warning 
 AR			= ar
 
 CFLAG       = $(CFLAGS) -g -DHAVE_INTTYPE_H -std=c++11

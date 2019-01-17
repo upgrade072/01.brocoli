@@ -288,19 +288,19 @@ void zero_linger (void *socket)
     int rc = zmq_setsockopt (socket, ZMQ_LINGER, &linger, sizeof(linger));
     assert (rc == 0 || errno == ETERM);
 
-    int rcv_hwm = 40000; // TODO !!! value adjust
+    int rcv_hwm = 80000; // TODO !!! value adjust
     rc = zmq_setsockopt (socket, ZMQ_RCVHWM, &rcv_hwm, sizeof(rcv_hwm));
     assert (rc == 0 || errno == ETERM);
 
-    int snd_hwm = 40000;
+    int snd_hwm = 80000;
     rc = zmq_setsockopt (socket, ZMQ_SNDHWM, &snd_hwm, sizeof(snd_hwm));
     assert (rc == 0 || errno == ETERM);
 
-    int rcv_buf = 1024 * 512;
+    int rcv_buf = 1024 * 512 * 12;
     rc = zmq_setsockopt (socket, ZMQ_RCVBUF, &rcv_buf, sizeof(rcv_buf));
     assert (rc == 0 || errno == ETERM);
 
-    int snd_buf = 1024 * 512;
+    int snd_buf = 1024 * 512 * 12;
     rc = zmq_setsockopt (socket, ZMQ_SNDBUF, &snd_buf, sizeof(snd_buf));
     assert (rc == 0 || errno == ETERM);
 
